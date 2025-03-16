@@ -16,18 +16,7 @@ struct CategorySelectionView: View {
 
             ForEach(categories, id: \.self) { category in
                 NavigationLink(
-                    destination: {
-                        if let puzzle = WordPuzzleModel.puzzles[category] {
-                            WordSearchView(
-                                category: category,
-                                grid: Utilities.generateWordGrid(category: category, gridSize: 10),
-                                wordsToFind: puzzle.words
-                            )
-                        } else {
-                            Text("No puzzle available for this category.")
-                                .font(.headline)
-                        }
-                    }
+                    destination: LevelSelectionView(category: category)
                 ) {
                     Text(category)
                         .padding()
@@ -40,13 +29,9 @@ struct CategorySelectionView: View {
         }
     }
 }
-
-
-
-
-
 struct CategorySelectionView_Previews: PreviewProvider {
     static var previews: some View {
         CategorySelectionView()
     }
 }
+

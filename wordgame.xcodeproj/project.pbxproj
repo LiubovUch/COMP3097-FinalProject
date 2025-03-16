@@ -25,6 +25,10 @@
 		186E16042D7410FA00FE358D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 186E15D92D7410FA00FE358D /* Assets.xcassets */; };
 		AD3295612D75210700B25990 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3295602D75210700B25990 /* LaunchScreenView.swift */; };
 		AD3295622D75210700B25990 /* LaunchScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AD3295602D75210700B25990 /* LaunchScreenView.swift */; };
+		C82087CC2D8377680021565E /* LevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82087CB2D8377670021565E /* LevelView.swift */; };
+		C82087CD2D8377680021565E /* LevelView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82087CB2D8377670021565E /* LevelView.swift */; };
+		C82087CF2D837D940021565E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82087CE2D837D940021565E /* GameState.swift */; };
+		C82087D02D837D940021565E /* GameState.swift in Sources */ = {isa = PBXBuildFile; fileRef = C82087CE2D837D940021565E /* GameState.swift */; };
 		C8B8F6B82D75543D00FB3F54 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8F6B72D75543D00FB3F54 /* GridView.swift */; };
 		C8B8F6B92D75543D00FB3F54 /* GridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8F6B72D75543D00FB3F54 /* GridView.swift */; };
 		C8B8F6BB2D75545D00FB3F54 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B8F6BA2D75545D00FB3F54 /* Utilities.swift */; };
@@ -73,6 +77,8 @@
 		186E15FB2D7410FA00FE358D /* Tests_macOS.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOS.swift; sourceTree = "<group>"; };
 		186E15FD2D7410FA00FE358D /* Tests_macOSLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Tests_macOSLaunchTests.swift; sourceTree = "<group>"; };
 		AD3295602D75210700B25990 /* LaunchScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LaunchScreenView.swift; sourceTree = "<group>"; };
+		C82087CB2D8377670021565E /* LevelView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LevelView.swift; sourceTree = "<group>"; };
+		C82087CE2D837D940021565E /* GameState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameState.swift; sourceTree = "<group>"; };
 		C8B8F6B72D75543D00FB3F54 /* GridView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = GridView.swift; path = "../../../Downloads/wordgame 2/Shared/GridView.swift"; sourceTree = "<group>"; };
 		C8B8F6BA2D75545D00FB3F54 /* Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Utilities.swift; path = "../../../Downloads/wordgame 2/Shared/Utilities.swift"; sourceTree = "<group>"; };
 		C8B8F6BD2D75546800FB3F54 /* WelcomeScreen.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = WelcomeScreen.swift; path = "../../../Downloads/wordgame 2/Shared/WelcomeScreen.swift"; sourceTree = "<group>"; };
@@ -140,6 +146,8 @@
 				C8B8F6C62D75547E00FB3F54 /* UsernameScreen.swift */,
 				C8B8F6C32D75547700FB3F54 /* LeaderboardView.swift */,
 				AD3295602D75210700B25990 /* LaunchScreenView.swift */,
+				C82087CB2D8377670021565E /* LevelView.swift */,
+				C82087CE2D837D940021565E /* GameState.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -344,7 +352,9 @@
 				186E16012D7410FA00FE358D /* ContentView.swift in Sources */,
 				C8B8F6B82D75543D00FB3F54 /* GridView.swift in Sources */,
 				C8B8F6BE2D75546800FB3F54 /* WelcomeScreen.swift in Sources */,
+				C82087CC2D8377680021565E /* LevelView.swift in Sources */,
 				186E15FF2D7410FA00FE358D /* wordgameApp.swift in Sources */,
+				C82087CF2D837D940021565E /* GameState.swift in Sources */,
 				C8B8F6BB2D75545D00FB3F54 /* Utilities.swift in Sources */,
 				C8B8F6C42D75547700FB3F54 /* LeaderboardView.swift in Sources */,
 				183CC0242D74BA8E00119A36 /* CategorySelectionView.swift in Sources */,
@@ -363,7 +373,9 @@
 				186E16022D7410FA00FE358D /* ContentView.swift in Sources */,
 				C8B8F6B92D75543D00FB3F54 /* GridView.swift in Sources */,
 				C8B8F6BF2D75546800FB3F54 /* WelcomeScreen.swift in Sources */,
+				C82087CD2D8377680021565E /* LevelView.swift in Sources */,
 				186E16002D7410FA00FE358D /* wordgameApp.swift in Sources */,
+				C82087D02D837D940021565E /* GameState.swift in Sources */,
 				C8B8F6BC2D75545D00FB3F54 /* Utilities.swift in Sources */,
 				C8B8F6C52D75547700FB3F54 /* LeaderboardView.swift in Sources */,
 				183CC0252D74BA8E00119A36 /* CategorySelectionView.swift in Sources */,
