@@ -1,12 +1,17 @@
 import Foundation
 
 struct Utilities {
+    // Generates a word search grid with given size and category
     static func generateWordGrid(category: String, gridSize: Int) -> [[Character]] {
         var grid = Array(repeating: Array(repeating: Character("-"), count: gridSize), count: gridSize)
         let words = WordPuzzleModel.puzzles[category]?.words ?? []
+        
+        // Place each word in the grid
         for word in words {
             placeWordInGrid(&grid, word: word, gridSize: gridSize)
         }
+        
+        // Fill empty spaces with random letters
         for row in 0..<gridSize {
             for col in 0..<gridSize {
                 if grid[row][col] == Character("-") {
@@ -18,9 +23,9 @@ struct Utilities {
         return grid
     }
    
-    
+    // Attempts to place a word in the grid at a random position and direction
     static func placeWordInGrid(_ grid: inout [[Character]], word: String, gridSize: Int) {
-        let directions = [(1, 0), (0, 1), (1, 1), (-1, 1)]
+        let directions = [(1, 0), (0, 1), (1, 1), (-1, 1)] // Possible word directions: vertical, horizontal, diagonal
         var placed = false
 
         while !placed {
@@ -37,6 +42,8 @@ struct Utilities {
                     break
                 }
             }
+
+            // If word can be placed, insert it into the grid
             if canPlace {
                 for (i, char) in word.enumerated() {
                     let r = row + i * direction.0
@@ -48,6 +55,7 @@ struct Utilities {
         }
     }
 
+    // Generates a random uppercase letter (A-Z) to fill empty grid spaces
     static func randomLetter() -> Character {
         return Character(UnicodeScalar(Int.random(in: 65...90))!)
     }
