@@ -2,16 +2,18 @@ import SwiftUI
 import Combine
 
 class GameState: ObservableObject {
+    @Published var username: String = "" {
+        didSet {
+            loadCompletedLevels()  // Load levels when username is updated
+        }
+    }
     @Published var completedLevelsPerCategory: [String: Set<Int>] = [:]
 
     init() {
+        // Ensure all categories have at least level 0 unlocked
         for category in WordPuzzleModel.puzzles.keys {
-            if completedLevelsPerCategory[category] == nil {
-                completedLevelsPerCategory[category] = Set([0])
-            }
+            completedLevelsPerCategory[category] = Set([0])
         }
-
-        loadCompletedLevels()
     }
 
     func isLevelUnlocked(level: Int, category: String) -> Bool {
@@ -20,7 +22,7 @@ class GameState: ObservableObject {
     }
 
     func unlockNextLevel(currentLevel: Int, category: String) {
-        let nextLevel = currentLevel 
+        let nextLevel = currentLevel
 
         if completedLevelsPerCategory[category] == nil {
             completedLevelsPerCategory[category] = []
@@ -45,21 +47,25 @@ class GameState: ObservableObject {
         }
     }
 
-
-
     func saveCompletedLevels() {
+        guard !username.isEmpty else { return }  // Don't save if no username
         let convertedCompletedLevels = completedLevelsPerCategory.mapValues { Array($0) }
-        UserDefaults.standard.set(convertedCompletedLevels, forKey: "completedLevelsPerCategory")
+        UserDefaults.standard.set(convertedCompletedLevels, forKey: "completedLevels_\(username)")
     }
 
     func loadCompletedLevels() {
-        if let savedLevels = UserDefaults.standard.dictionary(forKey: "completedLevelsPerCategory") as? [String: [Int]] {
+        guard !username.isEmpty else { return }  // Don't load if no username
+        if let savedLevels = UserDefaults.standard.dictionary(forKey: "completedLevels_\(username)") as? [String: [Int]] {
             completedLevelsPerCategory = savedLevels.reduce(into: [String: Set<Int>]()) { result, entry in
                 result[entry.key] = Set(entry.value)
             }
+        } else {
+            // If no saved data, initialize default levels
+            for category in WordPuzzleModel.puzzles.keys {
+                completedLevelsPerCategory[category] = Set([0])
+            }
         }
     }
-
 
     func resetGame() {
         for category in WordPuzzleModel.puzzles.keys {

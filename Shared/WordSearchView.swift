@@ -17,6 +17,7 @@ struct WordSearchView: View {
     @State private var gameEnded: Bool = false
     @State private var navigateToNextLevel: Bool = false
     @State private var navigateToCategorySelection: Bool = false
+    @State private var navigateToWelcomeScreen: Bool = false
     @State private var finalScore: Int = 0
 
     var levelData: WordPuzzle? {
@@ -144,10 +145,17 @@ struct WordSearchView: View {
     private func endGame() {
         timer?.cancel()
         finalScore = calculateFinalScore()
+        
+        if !gameState.username.isEmpty { // Ensure username is not empty
+            saveScore(for: gameState.username, score: finalScore)
+        }
+
         gameEnded = true
         gameState.completeLevel(level: level, category: category)
         gameState.unlockNextLevel(currentLevel: level, category: category)
     }
+
+
 
     private func calculateScore() -> Int {
         foundWords.count * 10
@@ -156,6 +164,18 @@ struct WordSearchView: View {
     private func calculateFinalScore() -> Int {
         calculateScore() + extraPoints()
     }
+    private func saveScore(for username: String, score: Int) {
+        var leaderboard = UserDefaults.standard.array(forKey: "leaderboard") as? [[String: Any]] ?? []
+        
+        if let index = leaderboard.firstIndex(where: { $0["name"] as? String == username }) {
+            leaderboard[index]["points"] = (leaderboard[index]["points"] as? Int ?? 0) + score
+        } else {
+            leaderboard.append(["name": username, "points": score])
+        }
+        
+        UserDefaults.standard.set(leaderboard, forKey: "leaderboard")
+    }
+
 
     private func extraPoints() -> Int {
         switch timeElapsed {
@@ -169,7 +189,6 @@ struct WordSearchView: View {
     private func timeString(from time: Int) -> String {
         String(format: "%02d:%02d", time / 60, time % 60)
     }
-
     private func gameOverAlert() -> Alert {
         Alert(
             title: Text("Game Over"),
@@ -179,17 +198,24 @@ struct WordSearchView: View {
                 goBack()
             },
             secondaryButton: .default(Text("Main Menu")) {
-                navigateToCategorySelection = true
+                navigateToWelcomeScreen = true // Set this flag to navigate to WelcomeScreen
             }
         )
     }
 
     private func navigationLinks() -> some View {
         Group {
+            // Navigate to Category Selection View
             NavigationLink(destination: CategorySelectionView(), isActive: $navigateToCategorySelection) { EmptyView() }
+            
+            // Navigate to Level Selection View for the next level
             NavigationLink(destination: LevelSelectionView(category: category), isActive: $navigateToNextLevel) { EmptyView() }
+            
+            // Navigate to WelcomeScreen when the "Main Menu" button is clicked
+            NavigationLink(destination: WelcomeScreen(), isActive: $navigateToWelcomeScreen) { EmptyView() }
         }
     }
+
 
     private func goBack() {
         self.presentationMode.wrappedValue.dismiss()  
