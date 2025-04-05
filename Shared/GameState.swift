@@ -3,14 +3,17 @@ import Combine
 
 // GameState class manages game progress, including completed levels and unlocking new ones.
 class GameState: ObservableObject {
+    @Published var username: String = "" {
+        didSet {
+            loadCompletedLevels()  // Load levels when username is updated
+        }
+    }
     @Published var completedLevelsPerCategory: [String: Set<Int>] = [:] // Tracks completed levels per category
 
     init() {
         // Initialize completed levels for each category, ensuring at least level 0 is present
         for category in WordPuzzleModel.puzzles.keys {
-            if completedLevelsPerCategory[category] == nil {
-                completedLevelsPerCategory[category] = Set([0])
-            }
+            completedLevelsPerCategory[category] = Set([0])
         }
 
         loadCompletedLevels() // Load saved progress from storage
@@ -24,7 +27,7 @@ class GameState: ObservableObject {
 
     // Unlocks the next level when the current level is completed
     func unlockNextLevel(currentLevel: Int, category: String) {
-        let nextLevel = currentLevel // Next level is the current level (potential bug: should it be currentLevel + 1?)
+        let nextLevel = currentLevel // Potential improvement: currentLevel + 1
 
         if completedLevelsPerCategory[category] == nil {
             completedLevelsPerCategory[category] = []
@@ -54,15 +57,22 @@ class GameState: ObservableObject {
 
     // Saves completed levels to UserDefaults for persistence
     func saveCompletedLevels() {
+        guard !username.isEmpty else { return }  // Don't save if no username
         let convertedCompletedLevels = completedLevelsPerCategory.mapValues { Array($0) }
-        UserDefaults.standard.set(convertedCompletedLevels, forKey: "completedLevelsPerCategory")
+        UserDefaults.standard.set(convertedCompletedLevels, forKey: "completedLevels_\(username)")
     }
 
     // Loads previously saved completed levels from UserDefaults
     func loadCompletedLevels() {
-        if let savedLevels = UserDefaults.standard.dictionary(forKey: "completedLevelsPerCategory") as? [String: [Int]] {
+        guard !username.isEmpty else { return }  // Don't load if no username
+        if let savedLevels = UserDefaults.standard.dictionary(forKey: "completedLevels_\(username)") as? [String: [Int]] {
             completedLevelsPerCategory = savedLevels.reduce(into: [String: Set<Int>]()) { result, entry in
                 result[entry.key] = Set(entry.value)
+            }
+        } else {
+            // If no saved data, initialize default levels
+            for category in WordPuzzleModel.puzzles.keys {
+                completedLevelsPerCategory[category] = Set([0])
             }
         }
     }

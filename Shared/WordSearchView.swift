@@ -8,18 +8,18 @@ struct WordSearchView: View {
     let category: String
     let level: Int
 
-    @State private var grid: [[Character]] = [] 
-    @State private var selectedPositions: [GridPosition] = [] 
-    @State private var foundWords: Set<String> = [] 
-    @State private var foundWordPositions: Set<GridPosition> = [] 
-    @State private var timeElapsed: Int = 0 
-    @State private var timer: AnyCancellable? 
-    @State private var gameEnded: Bool = false 
-    @State private var navigateToNextLevel: Bool = false 
-    @State private var navigateToCategorySelection: Bool = false 
-    @State private var finalScore: Int = 0 
+@State private var grid: [[Character]] = []
+@State private var selectedPositions: [GridPosition] = []
+@State private var foundWords: Set<String> = []
+@State private var foundWordPositions: Set<GridPosition> = []
+@State private var timeElapsed: Int = 0
+@State private var timer: AnyCancellable?
+@State private var gameEnded: Bool = false
+@State private var navigateToNextLevel: Bool = false
+@State private var navigateToCategorySelection: Bool = false
+@State private var navigateToWelcomeScreen: Bool = false
+@State private var finalScore: Int = 0
 
-    // Retrieve the current level data from the puzzle model
     var levelData: WordPuzzle? {
         WordPuzzleModel.puzzles[category]?[level]
     }
@@ -153,12 +153,17 @@ struct WordSearchView: View {
     private func endGame() {
         timer?.cancel()
         finalScore = calculateFinalScore()
+        
+        if !gameState.username.isEmpty { // Ensure username is not empty
+            saveScore(for: gameState.username, score: finalScore)
+        }
+
         gameEnded = true
         gameState.completeLevel(level: level, category: category)
         gameState.unlockNextLevel(currentLevel: level, category: category)
     }
 
-    // Calculate the player's current score
+
     private func calculateScore() -> Int {
         foundWords.count * 10
     }
@@ -167,6 +172,18 @@ struct WordSearchView: View {
     private func calculateFinalScore() -> Int {
         calculateScore() + extraPoints()
     }
+    private func saveScore(for username: String, score: Int) {
+        var leaderboard = UserDefaults.standard.array(forKey: "leaderboard") as? [[String: Any]] ?? []
+        
+        if let index = leaderboard.firstIndex(where: { $0["name"] as? String == username }) {
+            leaderboard[index]["points"] = (leaderboard[index]["points"] as? Int ?? 0) + score
+        } else {
+            leaderboard.append(["name": username, "points": score])
+        }
+        
+        UserDefaults.standard.set(leaderboard, forKey: "leaderboard")
+    }
+
 
     // Award extra points based on completion time
     private func extraPoints() -> Int {
@@ -183,7 +200,6 @@ struct WordSearchView: View {
         String(format: "%02d:%02d", time / 60, time % 60)
     }
 
-    // Show an alert when the game ends with final score details
     private func gameOverAlert() -> Alert {
         Alert(
             title: Text("Game Over"),
@@ -193,7 +209,7 @@ struct WordSearchView: View {
                 goBack()
             },
             secondaryButton: .default(Text("Main Menu")) {
-                navigateToCategorySelection = true
+                navigateToWelcomeScreen = true // Set this flag to navigate to WelcomeScreen
             }
         )
     }
@@ -201,12 +217,17 @@ struct WordSearchView: View {
     // Navigation logic for moving between game screens
     private func navigationLinks() -> some View {
         Group {
+            // Navigate to Category Selection View
             NavigationLink(destination: CategorySelectionView(), isActive: $navigateToCategorySelection) { EmptyView() }
+            
+            // Navigate to Level Selection View for the next level
             NavigationLink(destination: LevelSelectionView(category: category), isActive: $navigateToNextLevel) { EmptyView() }
+            
+            // Navigate to WelcomeScreen when the "Main Menu" button is clicked
+            NavigationLink(destination: WelcomeScreen(), isActive: $navigateToWelcomeScreen) { EmptyView() }
         }
     }
 
-    // Navigate back to the previous screen
     private func goBack() {
         self.presentationMode.wrappedValue.dismiss()  
     }
