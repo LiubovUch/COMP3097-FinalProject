@@ -1,3 +1,4 @@
+//Daria Ignateva 10143112
 import SwiftUI
 
 struct LaunchScreenView: View {
